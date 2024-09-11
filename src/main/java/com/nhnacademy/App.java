@@ -14,20 +14,19 @@ package com.nhnacademy;
 
 import com.nhnacademy.thread.CounterHandler;
 
-public class App
-{
-    public static void main( String[] args )
-    {
-        //TODO#4 CounterHandler 객체를 생성 합니다. countMaxSize : 10
-        CounterHandler counterHandler;
+public class App {
+    public static void main(String[] args) {
+        // TODO#4 CounterHandler 객체를 생성합니다. countMaxSize는 10으로 설정합니다.
+        CounterHandler counterHandler = new CounterHandler(10);
 
-        //TODO#5 thread 생성시 counterHandler 객체를 paramter로 전달 합니다.
-        Thread thread;
+        // TODO#5 CounterHandler 객체를 parameter로 전달하여 Thread 객체를 생성합니다.
+        Thread thread = new Thread(counterHandler);
 
-        //TODO#6 thread의 name을 my-counter로 설정 합니다.
+        // TODO#6 Thread의 name을 "my-counter"로 설정합니다.
+        thread.setName("my-counter");
 
-
-        //TODO#7 thread를 시작 합니다.
-
+        // TODO#7 Thread를 시작합니다.
+        thread.start();
     }
 }
+
