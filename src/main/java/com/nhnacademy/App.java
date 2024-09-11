@@ -44,9 +44,20 @@ public class App
         threadB.start();
         log.debug("threadB-state:{}",threadB.getState());
 
-        //TODO#1 - main Thread 에서 3초 후  threadA에 interrupt 예외를 발생 시킴 니다.
+        try {
+            // TODO#1 - main Thread에서 3초 후 threadA에 interrupt 예외를 발생 시킴니다.
+            Thread.sleep(3000);
+            threadA.interrupt();
+        } catch (InterruptedException e) {
+            log.error("Main thread interrupted during sleep", e);
+            Thread.currentThread().interrupt();
+        }
+
 
         //TODO#3 Main Thread가 threadA, ThreadB가 종료될 때 까지 대기 합니다. Thread.yield를 사용 합니다.
+        while (threadA.isAlive() || threadB.isAlive()) {
+            Thread.yield();
+        }
 
         //threadA, threadB 상태를 출력 합니다.
         log.debug("threadA-status:{}",threadA.getState());

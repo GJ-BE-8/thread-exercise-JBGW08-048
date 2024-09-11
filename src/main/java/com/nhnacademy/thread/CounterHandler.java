@@ -17,16 +17,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CounterHandler implements Runnable  {
     private final long countMaxSize;
-
     private long count;
 
     public CounterHandler(long countMaxSize) {
-        if(countMaxSize<=0){
+        if(countMaxSize <= 0){
             throw new IllegalArgumentException();
         }
-
+        this.count = 0L;
         this.countMaxSize = countMaxSize;
-        this.count=0l;
     }
 
     @Override
@@ -34,15 +32,17 @@ public class CounterHandler implements Runnable  {
         do {
             try {
                 Thread.sleep(1000);
-                count++;
-                log.debug("thread:{},state:{},count:{}",Thread.currentThread().getName(),Thread.currentThread().getState(),count);
             } catch (InterruptedException e) {
-                log.debug("{} - state - {}  - interupted 발생",Thread.currentThread().getName(),Thread.currentThread().getState());
-                throw new RuntimeException(e);
+                // InterruptedException이 발생하면 로그를 남기고 안전하게 스레드를 종료합니다.
+                log.warn("Thread interrupted: {}, terminating gracefully.", Thread.currentThread().getName());
+                return; // 스레드를 종료합니다.
             }
+            count++;
+            log.debug("thread:{}, state:{}, count:{}", Thread.currentThread().getName(), Thread.currentThread().getState(), count);
 
-        //TODO#2 해당 thread가 isInterrupted() 상태가 false 일 while loop를 실행 할 수 있도록 조건을 추가하세요
-        }while (count<countMaxSize);
+            // TODO#2 - Thread.yield()를 사용해서 수행되고 있는 작업을 다른 Thread에게 양보하세요.
+            Thread.yield();
 
+        } while (count < countMaxSize);
     }
 }
