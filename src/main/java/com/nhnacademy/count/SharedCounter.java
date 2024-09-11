@@ -15,32 +15,30 @@ package com.nhnacademy.count;
 public class SharedCounter {
     private long count;
 
-    public SharedCounter(){
-        count =0l;
+    public SharedCounter() {
+        count = 0L;
     }
 
     public SharedCounter(long count) {
-        //TODO#1-1 생성자를 초기화 합니다. count < 0 IllegalArgumentException아 발생 합니다.
-        if(count <0){
-            throw new IllegalArgumentException("count > 0 ");
+        // TODO#1-1 생성자를 초기화합니다. count < 0 일 경우 IllegalArgumentException이 발생합니다.
+        if (count < 0) {
+            throw new IllegalArgumentException("count must be >= 0");
         }
         this.count = count;
     }
 
-    public long getCount(){
-        //TODO#1-2 count 를 반환 합니다.
+    public synchronized long getCount() {
+        // TODO#1-2 count를 반환합니다.
         return count;
     }
 
-    public long increaseAndGet(){
-        //TODO#1-3 count = count + 1 증가시키고 count를 반환 합니다.
-        count = count + 1;
-        return count;
+    public synchronized long increaseAndGet() {
+        // TODO#1-3 count = count + 1 증가시키고 count를 반환합니다.
+        return ++count; // count를 먼저 증가시키고 그 값을 반환합니다.
     }
 
-    public long decreaseAndGet(){
-        //TODO#1-4 count = count-1 감소시키고 count를 반환 합니다.
-        count = count - 1;
-        return count;
+    public synchronized long decreaseAndGet() {
+        // TODO#1-4 count = count - 1 감소시키고 count를 반환합니다.
+        return --count; // count를 먼저 감소시키고 그 값을 반환합니다.
     }
 }
