@@ -19,43 +19,47 @@ public class SharedCounter {
     private final ReentrantLock mutex;
 
     public SharedCounter(){
-        this(0l);
+        this(0L);
     }
 
     public SharedCounter(long count) {
-        if(count <0){
-            throw new IllegalArgumentException("count > 0 ");
+        if (count < 0) {
+            throw new IllegalArgumentException("count must be >= 0");
         }
         this.count = count;
-        /*TODO#1-1 ReentrantLock 생성 합니다.( mutex는 동시에 하나의 Thread만 접근할 수 있습니다. )
-           ReentrantLock은 기본적으로 비공정한 락 입니다. 공정성을 보장 하도록 초기화 합니다.
-         */
-        mutex = null;
+        // TODO#1-1 ReentrantLock 생성 (공정성 보장)
+        mutex = new ReentrantLock(true);
     }
 
-    public long getCount(){
-        /*TODO#1-2 count 를 반환 합니다.
-            mutex.lock()를 호출하여 다른 thread가 접근할 수 없도록 lock을 걸어 줍니다.
-            쓰레드가 작업이 완료되면
-            mutex.unlock()를 호출하여
-            잠금을 해제 합니다. 뮤텍스는 lock을 건 쓰레드만 lock을 해제할 수 있습니다.
-         */
-        return count;
+    public long getCount() {
+        // TODO#1-2 count를 반환 (동기화)
+        mutex.lock(); // lock 획득
+        try {
+            return count;
+        } finally {
+            mutex.unlock(); // lock 해제
+        }
     }
 
-    public long increaseAndGet(){
-        /* TODO#1-3 count = count + 1 증가시키고 count를 반환 합니다.
-           1-2 처럼 mutex를 이용해서 동기화 될 수 있도록 구현 합니다.
-        */
-        count = count + 1;
-        return count;
+    public long increaseAndGet() {
+        // TODO#1-3 count = count + 1 증가 및 반환 (동기화)
+        mutex.lock(); // lock 획득
+        try {
+            count = count + 1;
+            return count;
+        } finally {
+            mutex.unlock(); // lock 해제
+        }
     }
 
-    public long decreaseAndGet(){
-        /*TODO#1-4 count = count-1 감소시키고 count를 반환 합니다.
-          1-2 처럼 mutex를 이용해서 동기화 될 수 있도록 구현 합니다.
-        */
-        count = count - 1;
-        return count;
+    public long decreaseAndGet() {
+        // TODO#1-4 count = count - 1 감소 및 반환 (동기화)
+        mutex.lock(); // lock 획득
+        try {
+            count = count - 1;
+            return count;
+        } finally {
+            mutex.unlock(); // lock 해제
+        }
     }
 }
